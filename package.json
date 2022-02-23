@@ -1,0 +1,24 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "For difference calculations",
+  "main": "gendiff.js",
+  "type": "module",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igor23samohvalov/frontend-project-lvl2.git"
+  },
+  "author": "Igor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/igor23samohvalov/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/igor23samohvalov/frontend-project-lvl2#readme",
+  "dependencies": {
+    "cli": "^1.0.1",
+    "commander": "^9.0.0"
+  }
+}
