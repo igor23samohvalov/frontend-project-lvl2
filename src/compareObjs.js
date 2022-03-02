@@ -1,34 +1,54 @@
 import _ from 'lodash';
 
+const isObject = (obj) => {
+  if (typeof obj === 'object' && obj !== null) {
+    return true;
+  }
+
+  return false;
+};
+
 function genDiff(file1 = {}, file2 = {}) {
   const file2Data = Object.entries(file2);
   const file1Data = Object.entries(file1);
-  const result = [];
-
-  file2Data.forEach(([key, value]) => {
-    if (Object.prototype.hasOwnProperty.call(file1, key)) {
-      if (file1[key] === value) {
-        result.push(`    ${key}: ${value}`);
-      } else {
-        result.push(`  - ${key}: ${file1[key]}`);
-        result.push(`  + ${key}: ${value}`);
-      }
-    } else {
-      result.push(`  + ${key}: ${value}`);
-    }
-  });
+  let result = [];
 
   file1Data.forEach(([key, value]) => {
-    if (!Object.prototype.hasOwnProperty.call(file2, key)) {
-      result.push((`  - ${key}: ${value}`));
+    if (!_.has(file2, key)) {
+      if (isObject(value)) {
+        result.push([`- ${key}`, genDiff(value, value)]);
+      } else {
+        result.push([`- ${key}`, value]);
+      }
     }
   });
 
-  const sortedResult = _.sortBy(result, (item) => item.slice(4, 5));
-  sortedResult.push('}');
-  sortedResult.unshift('{');
+  file2Data.forEach(([key, value]) => {
+    if (!_.has(file1, key)) {
+      if (isObject(value)) {
+        result.push([`+ ${key}`, genDiff(value, value)]);
+      } else {
+        result.push([`+ ${key}`, value]);
+      }
+    } else if (isObject(value) && !isObject(file1[key])) {
+      result.push([`- ${key}`, file1[key]]);
+      result.push([`+ ${key}`, genDiff(value, value)]);
+    } else if (!isObject(value) && isObject(file1[key])) {
+      result.push([`- ${key}`, genDiff(file1[key], file1[key])]);
+      result.push([`+ ${key}`, value]);
+    } else if (isObject(value) && isObject(file1[key])) {
+      result.push([`  ${key}`, genDiff(file1[key], value)]);
+    } else if (value === file1[key]) {
+      result.push([`  ${key}`, value]);
+    } else {
+      result.push([`- ${key}`, file1[key]]);
+      result.push([`+ ${key}`, value]);
+    }
+  });
 
-  return sortedResult.join('\n');
+  result = Object.fromEntries(_.sortBy(result, (item) => item[0].slice(2)));
+
+  return result;
 }
 
-export default genDiff;
+export { genDiff, isObject };
