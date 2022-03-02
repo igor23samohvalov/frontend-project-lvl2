@@ -19,7 +19,7 @@ program
 
     if (options.format === 'stylish') {
       console.dir(stylish(genDiff(firstFile, secondFile)), { depth: null });
-    } else {
+    } else if (options.format === 'stringify') {
       console.log(stringify(genDiff(firstFile, secondFile)));
     }
   });

@@ -6,3 +6,5 @@
 [![asciicast](https://asciinema.org/a/xrd3b98qTDovGtXdfwf5XwBen.svg)](https://asciinema.org/a/xrd3b98qTDovGtXdfwf5XwBen)
 <p>YAML/YML files comparison</p>
 [![asciicast](https://asciinema.org/a/1024spVOvZBiqfycLUUCn8nSW.svg)](https://asciinema.org/a/1024spVOvZBiqfycLUUCn8nSW)
+<p>Recourse feature, different format styles of representation</p>
+[![asciicast](https://asciinema.org/a/EXwGaXsGN5yhKctZCSb7q61JK.svg)](https://asciinema.org/a/EXwGaXsGN5yhKctZCSb7q61JK)
