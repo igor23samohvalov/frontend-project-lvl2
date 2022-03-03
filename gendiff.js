@@ -2,8 +2,7 @@
 import { Command } from 'commander';
 import { genDiff } from './src/compareObjs.js';
 import parseFormat from './src/parsers.js';
-import stringify from './formatters/stringify.js';
-import stylish from './formatters/stylish.js';
+import formatObj from './formatters/index.js';
 
 const program = new Command();
 
@@ -16,12 +15,9 @@ program
   .action((f1, f2, options) => {
     const firstFile = parseFormat(f1);
     const secondFile = parseFormat(f2);
+    const diffObj = genDiff(firstFile, secondFile);
 
-    if (options.format === 'stylish') {
-      console.dir(stylish(genDiff(firstFile, secondFile)), { depth: null });
-    } else if (options.format === 'stringify') {
-      console.log(stringify(genDiff(firstFile, secondFile)));
-    }
+    formatObj(options.format, diffObj);
   });
 
 program.parse();
