@@ -1,6 +1,7 @@
 import stringify from './stringify.js';
 import stylish from './stylish.js';
 import { plain } from './plain.js';
+import toJSON from './toJS.js';
 
 export default (format, obj) => {
   switch (format) {
@@ -9,6 +10,9 @@ export default (format, obj) => {
       break;
     case 'plain':
       console.log(plain(obj));
+      break;
+    case 'json':
+      console.log(toJSON(obj));
       break;
     case 'stylish':
     default:
