@@ -1,10 +1,11 @@
+import _ from 'lodash';
 import * as fs from 'fs';
 import { cwd } from 'process';
 import path from 'path';
 import yaml from 'js-yaml';
 
 function parseFormat(file = '.') {
-  const fileFormat = file.split('.')[1];
+  const fileFormat = _.last(file.split('.'));
 
   switch (fileFormat) {
     case 'json':

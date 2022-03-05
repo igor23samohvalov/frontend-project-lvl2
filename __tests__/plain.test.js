@@ -1,4 +1,9 @@
-import { plain, whatChanged, getDiffStatement } from '../formatters/plain.js';
+import {
+  plain,
+  whatChanged,
+  getDiffStatement,
+  parseValue,
+} from '../formatters/plain.js';
 import testObjs from '../__fixtures__/genDifftestplates.js';
 import { getComparison } from '../src/getComparison.js';
 
@@ -17,4 +22,11 @@ test('whatChanged reacts to sign', () => {
     .toBe('added');
   expect(whatChanged())
     .toBe('unchanged');
+});
+
+test('parseValue converts value to a specified string', () => {
+  expect(parseValue(null))
+    .not.toBe('[complex value]');
+  expect(parseValue('some string'))
+    .toContain('');
 });

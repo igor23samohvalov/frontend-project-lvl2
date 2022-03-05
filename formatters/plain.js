@@ -63,4 +63,9 @@ function plain(data = {}, path = '') {
   return result.join('\n');
 }
 
-export { plain, whatChanged, getDiffStatement };
+export {
+  plain,
+  whatChanged,
+  getDiffStatement,
+  parseValue,
+};

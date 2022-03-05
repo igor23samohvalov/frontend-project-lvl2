@@ -1,8 +1,11 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
+  "bin": {
+    "gendiff": "bin/cli.js"
+  },
   "description": "For difference calculations",
-  "main": "bin/gendiff.js",
+  "main": "lib/gendiff.js",
   "type": "module",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
