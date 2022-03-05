@@ -1,13 +1,17 @@
-import { getComparison } from '../src/getComparison.js';
-import parseFormat from '../src/parsers.js';
-import getFormattedObj from '../formatters/index.js';
+#!/usr/bin/env node
+import { Command } from 'commander';
+import genDiff from '../src/gendiff.js';
 
-function genDiff(file1, file2, format) {
-  const obj1 = parseFormat(file1);
-  const obj2 = parseFormat(file2);
-  const objDiff = getComparison(obj1, obj2);
+const program = new Command();
 
-  return getFormattedObj(format, objDiff);
-}
+program
+  .name('gendiff')
+  .description('Compares two configuration files and shows a difference.')
+  .version('0.0.1')
+  .option('-f, --format <type>', 'output format', 'stylish')
+  .arguments('<filepath1> <filepath2>')
+  .action((f1, f2, options) => {
+    console.log(genDiff(f1, f2, options.format));
+  });
 
-export default genDiff;
+program.parse();
