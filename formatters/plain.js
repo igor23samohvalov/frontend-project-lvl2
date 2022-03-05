@@ -48,13 +48,13 @@ function whatChanged(key = ' ') {
 function plain(data = {}, path = '') {
   const result = Object.entries(data).reduce((acc, [key, value]) => {
     if (whatChanged(key) === 'unchanged' && isObject(value)) {
-      acc.push(plain(value, `${path}.${key.slice(2)}`));
+      acc[acc.length] = plain(value, `${path}.${key.slice(2)}`);
     } else if (whatChanged(key) === 'removed' && !_.has(data, `+ ${key.slice(2)}`)) {
-      acc.push(getDiffStatement('- ', `${path}.${key.slice(2)}`));
+      acc[acc.length] = getDiffStatement('- ', `${path}.${key.slice(2)}`);
     } else if (whatChanged(key) === 'added' && _.has(data, `- ${key.slice(2)}`)) {
-      acc.push(getDiffStatement('-+', `${path}.${key.slice(2)}`, value, data[`- ${key.slice(2)}`]));
+      acc[acc.length] = getDiffStatement('-+', `${path}.${key.slice(2)}`, value, data[`- ${key.slice(2)}`]);
     } else if (whatChanged(key) === 'added' && !_.has(data, `- ${key.slice(2)}`)) {
-      acc.push(getDiffStatement('+ ', `${path}.${key.slice(2)}`, value));
+      acc[acc.length] = getDiffStatement('+ ', `${path}.${key.slice(2)}`, value);
     }
 
     return acc;
