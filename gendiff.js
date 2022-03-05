@@ -11,7 +11,7 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .arguments('<filepath1> <filepath2>')
   .action((f1, f2, options) => {
-    genDiff(f1, f2, options.format);
+    console.log(genDiff(f1, f2, options.format));
   });
 
 program.parse();
