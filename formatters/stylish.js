@@ -1,3 +1,5 @@
+import { isObject } from '../src/compareObjs.js';
+
 const signs = {
   '- ': 'removed',
   '+ ': 'added',
@@ -6,7 +8,7 @@ const signs = {
 
 function stylish(obj = {}) {
   return Object.entries(obj).map(([key, value]) => {
-    if (typeof value === 'object' && value !== null) {
+    if (isObject(value)) {
       return {
         name: key.slice(2),
         children: stylish(value),

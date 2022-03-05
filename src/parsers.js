@@ -5,21 +5,16 @@ import yaml from 'js-yaml';
 
 function parseFormat(file = '.') {
   const fileFormat = file.split('.')[1];
-  let output;
 
   switch (fileFormat) {
     case 'json':
-      output = JSON.parse(fs.readFileSync(path.resolve(cwd(), file)));
-      break;
+      return JSON.parse(fs.readFileSync(path.resolve(cwd(), file)));
     case 'yml':
     case 'yaml':
-      output = yaml.load(fs.readFileSync(path.resolve(cwd(), file)));
-      break;
+      return yaml.load(fs.readFileSync(path.resolve(cwd(), file)));
     default:
       return console.log(`${fileFormat} is not supported.`);
   }
-
-  return output;
 }
 
 export default parseFormat;

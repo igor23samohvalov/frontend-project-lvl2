@@ -11,7 +11,7 @@ const isObject = (obj) => {
 function genDiff(file1 = {}, file2 = {}) {
   const file2Data = Object.entries(file2);
   const file1Data = Object.entries(file1);
-  let result = [];
+  const result = [];
 
   file1Data.forEach(([key, value]) => {
     if (!_.has(file2, key)) {
@@ -46,9 +46,9 @@ function genDiff(file1 = {}, file2 = {}) {
     }
   });
 
-  result = Object.fromEntries(_.sortBy(result, (item) => item[0].slice(2)));
+  const sortedResult = Object.fromEntries(_.sortBy(result, (item) => item[0].slice(2)));
 
-  return result;
+  return sortedResult;
 }
 
 export { genDiff, isObject };
