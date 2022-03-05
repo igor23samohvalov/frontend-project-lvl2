@@ -1,25 +1,35 @@
 import _ from 'lodash';
 import { isObject } from '../src/getComparison.js';
 
+function parseValue(value) {
+  if (value === null) {
+    return `'${null}'`;
+  }
+  switch (typeof value) {
+    case 'object':
+      return '[complex value]';
+    case 'string':
+      return `'${value}'`;
+    default:
+      return value;
+  }
+}
+
 function getDiffStatement(diff, path, newValue, oldValue) {
-  const newOldValue = isObject(oldValue)
-    ? '[complex value]'
-    : oldValue;
-  const newNewValue = isObject(newValue)
-    ? '[complex value]'
-    : newValue;
+  const newOldValue = parseValue(oldValue);
+  const newNewValue = parseValue(newValue);
   const newPath = path.startsWith('.')
     ? path.slice(1)
     : path;
 
   switch (diff) {
     case '+ ':
-      return [`Property "${newPath}" was added with value: "${newNewValue}"`];
+      return [`Property '${newPath}' was added with value: ${newNewValue}`];
     case '- ':
-      return [`Property "${newPath}" was removed`];
+      return [`Property '${newPath}' was removed`];
     case '-+':
     default:
-      return [`Property "${newPath}" was updated. From "${newOldValue}" to "${newNewValue}"`];
+      return [`Property '${newPath}' was updated. From ${newOldValue} to ${newNewValue}`];
   }
 }
 

@@ -9,7 +9,7 @@ test('plain makes JS AST', () => {
 
 test('getDiffStatement returns notes', () => {
   expect(getDiffStatement('-+', '.path', { key: 1 }, 2))
-    .toEqual(['Property "path" was updated. From "2" to "[complex value]"']);
+    .toEqual(["Property 'path' was updated. From 2 to [complex value]"]);
 });
 
 test('whatChanged reacts to sign', () => {
