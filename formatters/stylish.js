@@ -1,29 +1,32 @@
 import { isObject } from '../src/compareObjs.js';
 
-const signs = {
-  '- ': 'removed',
-  '+ ': 'added',
-  '  ': 'unchanged',
-};
-
-function stylish(obj = {}) {
-  return Object.entries(obj).map(([key, value]) => {
+function recourseObj(data, sign, repeats, reps) {
+  return Object.entries(data).reduce((prev, [key, value]) => {
     if (isObject(value)) {
-      return {
-        name: key.slice(2),
-        children: stylish(value),
-        type: typeof value,
-        changes: signs[key.slice(0, 2)],
-      };
+      prev.push(`${sign.repeat(repeats)}${key}: ${[recourseObj(value, sign, repeats + reps, reps)]}`);
+      prev.push((`${sign.repeat(repeats)}  }`));
+    } else {
+      prev.push(`${sign.repeat(repeats)}${key}: ${value}`);
     }
 
-    return {
-      name: key.slice(2),
-      value: obj[key],
-      type: typeof value,
-      changes: signs[key.slice(0, 2)],
-    };
-  });
+    return prev;
+  }, ['{']).join('\n').replace(/['",]+/g, '');
 }
 
-export default stylish;
+function stringify(data, sign = ' ', repeats = 2) {
+  switch (typeof data) {
+    case 'boolean':
+    case 'number':
+    case 'string':
+      return data.toString().replace(/['",]+/g, '');
+    case 'object':
+    default: {
+      const reps = repeats + 2;
+      const result = recourseObj(data, sign, repeats, reps);
+
+      return `${result}\n}`;
+    }
+  }
+}
+
+export default stringify;
