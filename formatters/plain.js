@@ -3,7 +3,7 @@ import { isObject } from '../src/getComparison.js';
 
 function parseValue(value) {
   if (value === null) {
-    return `'${null}'`;
+    return null;
   }
   switch (typeof value) {
     case 'object':
