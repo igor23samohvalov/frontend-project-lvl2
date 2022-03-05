@@ -6,17 +6,13 @@ import toJSON from './toJS.js';
 export default (format, obj) => {
   switch (format) {
     case 'makeTree':
-      console.dir(makeTree(obj), { depth: null });
-      break;
+      return makeTree(obj);
     case 'plain':
-      console.log(plain(obj));
-      break;
+      return plain(obj);
     case 'json':
-      console.log(toJSON(obj));
-      break;
+      return toJSON(obj);
     case 'stylish':
     default:
-      console.log(stylish(obj, ' ', 2));
-      break;
+      return stylish(obj, ' ', 2);
   }
 };

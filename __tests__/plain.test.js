@@ -1,9 +1,9 @@
 import { plain, whatChanged, getDiffStatement } from '../formatters/plain.js';
 import testObjs from '../__fixtures__/genDifftestplates.js';
-import { genDiff } from '../src/compareObjs.js';
+import { getComparison } from '../src/getComparison.js';
 
 test('plain makes JS AST', () => {
-  expect(typeof plain(genDiff(testObjs.file1, testObjs.file2)))
+  expect(typeof plain(getComparison(testObjs.file1, testObjs.file2)))
     .toBe('string');
 });
 

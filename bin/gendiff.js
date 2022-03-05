@@ -7,7 +7,7 @@ function genDiff(file1, file2, format) {
   const obj2 = parseFormat(file2);
   const objDiff = getComparison(obj1, obj2);
 
-  return getFormattedObj(format, objDiff);
+  return console.log(getFormattedObj(format, objDiff));
 }
 
 export default genDiff;

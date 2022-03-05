@@ -1,12 +1,12 @@
-import { genDiff } from '../src/compareObjs.js';
+import { getComparison } from '../src/getComparison.js';
 import toJSON from '../formatters/toJS.js';
 import testObjs from '../__fixtures__/genDifftestplates.js';
 
 test('toJSON returns string object with quotes', () => {
-  expect(typeof toJSON(genDiff()))
+  expect(typeof toJSON(getComparison()))
     .toBe('string');
-  expect(toJSON(genDiff(testObjs.file1, testObjs.file2)))
+  expect(toJSON(getComparison(testObjs.file1, testObjs.file2)))
     .toContain('"');
-  expect(toJSON(genDiff()))
+  expect(toJSON(getComparison()))
     .toBe('{}');
 });
