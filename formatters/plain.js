@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isObject } from '../src/compareObjs.js';
+import { isObject } from '../src/getComparison.js';
 
 function getDiffStatement(diff, path, newValue, oldValue) {
   const newOldValue = isObject(oldValue)

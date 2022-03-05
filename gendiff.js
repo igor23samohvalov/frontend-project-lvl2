@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { genDiff } from './src/compareObjs.js';
-import parseFormat from './src/parsers.js';
-import formatObj from './formatters/index.js';
+import genDiff from './bin/gendiff.js';
 
 const program = new Command();
 
@@ -13,13 +11,7 @@ program
   .option('-f, --format <type>', 'output format', 'stylish')
   .arguments('<filepath1> <filepath2>')
   .action((f1, f2, options) => {
-    const firstFile = parseFormat(f1);
-    const secondFile = parseFormat(f2);
-    const diffObj = genDiff(firstFile, secondFile);
-
-    formatObj(options.format, diffObj);
+    genDiff(f1, f2, options.format);
   });
 
 program.parse();
-
-export default genDiff;

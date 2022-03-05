@@ -1,4 +1,4 @@
-import { isObject } from '../src/compareObjs.js';
+import { isObject } from '../src/getComparison.js';
 
 const signs = {
   '- ': 'removed',

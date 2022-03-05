@@ -8,7 +8,7 @@ const isObject = (obj) => {
   return false;
 };
 
-function genDiff(file1 = {}, file2 = {}) {
+function getComparison(file1 = {}, file2 = {}) {
   const file2Data = Object.entries(file2);
   const file1Data = Object.entries(file1);
   const result = [];
@@ -16,7 +16,7 @@ function genDiff(file1 = {}, file2 = {}) {
   file1Data.forEach(([key, value]) => {
     if (!_.has(file2, key)) {
       if (isObject(value)) {
-        result.push([`- ${key}`, genDiff(value, value)]);
+        result.push([`- ${key}`, getComparison(value, value)]);
       } else {
         result.push([`- ${key}`, value]);
       }
@@ -26,18 +26,18 @@ function genDiff(file1 = {}, file2 = {}) {
   file2Data.forEach(([key, value]) => {
     if (!_.has(file1, key)) {
       if (isObject(value)) {
-        result.push([`+ ${key}`, genDiff(value, value)]);
+        result.push([`+ ${key}`, getComparison(value, value)]);
       } else {
         result.push([`+ ${key}`, value]);
       }
     } else if (isObject(value) && !isObject(file1[key])) {
       result.push([`- ${key}`, file1[key]]);
-      result.push([`+ ${key}`, genDiff(value, value)]);
+      result.push([`+ ${key}`, getComparison(value, value)]);
     } else if (!isObject(value) && isObject(file1[key])) {
-      result.push([`- ${key}`, genDiff(file1[key], file1[key])]);
+      result.push([`- ${key}`, getComparison(file1[key], file1[key])]);
       result.push([`+ ${key}`, value]);
     } else if (isObject(value) && isObject(file1[key])) {
-      result.push([`  ${key}`, genDiff(file1[key], value)]);
+      result.push([`  ${key}`, getComparison(file1[key], value)]);
     } else if (value === file1[key]) {
       result.push([`  ${key}`, value]);
     } else {
@@ -51,4 +51,4 @@ function genDiff(file1 = {}, file2 = {}) {
   return sortedResult;
 }
 
-export { genDiff, isObject };
+export { getComparison, isObject };

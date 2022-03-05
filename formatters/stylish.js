@@ -1,4 +1,4 @@
-import { isObject } from '../src/compareObjs.js';
+import { isObject } from '../src/getComparison.js';
 
 function recourseObj(data, sign, repeats, reps) {
   return Object.entries(data).reduce((prev, [key, value]) => {
