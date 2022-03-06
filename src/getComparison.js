@@ -30,9 +30,14 @@ function getComparison(file1 = {}, file2 = {}) {
       return [`+ ${key}`, value];
     });
 
-  const unchangedPlainData = file2Data
+  const unchangedData = file2Data
     .filter(([key, value]) => file1[key] === value)
-    .map(([key, value]) => [`  ${key}`, value]);
+    .map(([key, value]) => {
+      if (isObject(value)) {
+        return [`  ${key}`, getComparison(value, value)];
+      }
+      return [`  ${key}`, value];
+    });
 
   const updatedObjectData = file2Data
     .filter(([key, value]) => (_.has(file1, key) && file1[key] !== value))
@@ -55,7 +60,7 @@ function getComparison(file1 = {}, file2 = {}) {
   const data = [
     ...removedData,
     ...addedData,
-    ...unchangedPlainData,
+    ...unchangedData,
     ...updatedObjectData,
   ];
 
