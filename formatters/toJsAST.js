@@ -6,14 +6,14 @@ const signs = {
   '  ': 'unchanged',
 };
 
-function makeTree(obj = {}) {
+function toJsAST(obj = {}) {
   return Object.entries(obj).map(([key, value]) => {
     if (isObject(value)) {
       return {
         name: key.slice(2),
-        children: makeTree(value),
+        children: toJsAST(value),
         type: typeof value,
-        changes: signs[key.slice(0, 2)],
+        state: signs[key.slice(0, 2)],
       };
     }
 
@@ -21,9 +21,9 @@ function makeTree(obj = {}) {
       name: key.slice(2),
       value: obj[key],
       type: typeof value,
-      changes: signs[key.slice(0, 2)],
+      state: signs[key.slice(0, 2)],
     };
   });
 }
 
-export default makeTree;
+export default toJsAST;

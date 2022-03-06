@@ -5,15 +5,16 @@ import {
   parseValue,
 } from '../formatters/plain.js';
 import testObjs from '../__fixtures__/genDifftestplates.js';
+import toJsAST from '../formatters/toJsAST.js';
 import { getComparison } from '../src/getComparison.js';
 
-test('plain makes JS AST', () => {
-  expect(typeof plain(getComparison(testObjs.file1, testObjs.file2)))
+test('plain return string', () => {
+  expect(typeof plain(toJsAST(getComparison(testObjs.file1, testObjs.file2))))
     .toBe('string');
 });
 
 test('getDiffStatement returns notes', () => {
-  expect(getDiffStatement('-+', '.path', { key: 1 }, 2))
+  expect(getDiffStatement('-+', '.path', { children: [1] }, { value: 2 }))
     .toEqual(["Property 'path' was updated. From 2 to [complex value]"]);
 });
 
@@ -25,8 +26,8 @@ test('whatChanged reacts to sign', () => {
 });
 
 test('parseValue converts value to a specified string', () => {
-  expect(parseValue(null))
+  expect(parseValue({ value: null }))
     .not.toBe('[complex value]');
-  expect(parseValue('some string'))
+  expect(parseValue({ value: 'some string' }))
     .toContain('');
 });

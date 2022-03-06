@@ -1,18 +1,23 @@
 import _ from 'lodash';
-import { isObject } from '../src/getComparison.js';
 
-function parseValue(value) {
-  if (value === null) {
+function hasOpposite(nodes, node) {
+  if (nodes.filter((elem) => elem.name === node.name).length > 1) {
+    return true;
+  }
+  return false;
+}
+
+function parseValue(data) {
+  if (data === undefined || data.value === null) {
     return null;
   }
-  switch (typeof value) {
-    case 'object':
-      return '[complex value]';
-    case 'string':
-      return `'${value}'`;
-    default:
-      return value;
+  if (_.has(data, 'children')) {
+    return '[complex value]';
   }
+  if (typeof data.value === 'string') {
+    return `'${data.value}'`;
+  }
+  return data.value;
 }
 
 function getDiffStatement(diff, path, newValue, oldValue) {
@@ -45,20 +50,34 @@ function whatChanged(key = ' ') {
   }
 }
 
-function plain(data = {}, path = '') {
-  const result = Object.entries(data).reduce((acc, [key, value]) => {
-    if (whatChanged(key) === 'unchanged' && isObject(value)) {
-      acc[acc.length] = plain(value, `${path}.${key.slice(2)}`);
-    } else if (whatChanged(key) === 'removed' && !_.has(data, `+ ${key.slice(2)}`)) {
-      acc[acc.length] = getDiffStatement('- ', `${path}.${key.slice(2)}`);
-    } else if (whatChanged(key) === 'added' && _.has(data, `- ${key.slice(2)}`)) {
-      acc[acc.length] = getDiffStatement('-+', `${path}.${key.slice(2)}`, value, data[`- ${key.slice(2)}`]);
-    } else if (whatChanged(key) === 'added' && !_.has(data, `- ${key.slice(2)}`)) {
-      acc[acc.length] = getDiffStatement('+ ', `${path}.${key.slice(2)}`, value);
+function plain(data = [], path = '') {
+  const result = data.flatMap((node, i) => {
+    if (_.has(node, 'value') && node.state === 'unchanged') {
+      return [];
     }
-
-    return acc;
-  }, []);
+    if (_.has(node, 'value') && node.state === 'added' && hasOpposite(data, node)) {
+      return [];
+    }
+    if (_.has(node, 'children') && node.state === 'added' && hasOpposite(data, node)) {
+      return [];
+    }
+    if (_.has(node, 'value') && node.state === 'removed' && hasOpposite(data, node)) {
+      return getDiffStatement('-+', `${path}.${node.name}`, data[i + 1], node);
+    }
+    if (_.has(node, 'children') && node.state === 'removed' && hasOpposite(data, node)) {
+      return getDiffStatement('-+', `${path}.${node.name}`, data[i + 1], node);
+    }
+    if (node.state === 'added') {
+      return getDiffStatement('+ ', `${path}.${node.name}`, node);
+    }
+    if (node.state === 'removed') {
+      return getDiffStatement('- ', `${path}.${node.name}`, node);
+    }
+    if (_.has(node, 'children') && node.state === 'unchanged') {
+      return plain(node.children, `${path}.${node.name}`);
+    }
+    return [];
+  });
 
   return result.join('\n');
 }

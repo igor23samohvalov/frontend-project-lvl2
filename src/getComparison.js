@@ -11,42 +11,55 @@ const isObject = (obj) => {
 function getComparison(file1 = {}, file2 = {}) {
   const file2Data = Object.entries(file2);
   const file1Data = Object.entries(file1);
-  const result = [];
 
-  file1Data.forEach(([key, value]) => {
-    if (!_.has(file2, key)) {
+  const removedData = file1Data
+    .filter(([key]) => !_.has(file2, key))
+    .map(([key, value]) => {
       if (isObject(value)) {
-        result.push([`- ${key}`, getComparison(value, value)]);
-      } else {
-        result.push([`- ${key}`, value]);
+        return [`- ${key}`, getComparison(value, value)];
       }
-    }
-  });
+      return [`- ${key}`, value];
+    });
 
-  file2Data.forEach(([key, value]) => {
-    if (!_.has(file1, key)) {
+  const addedData = file2Data
+    .filter(([key]) => !_.has(file1, key))
+    .map(([key, value]) => {
       if (isObject(value)) {
-        result.push([`+ ${key}`, getComparison(value, value)]);
-      } else {
-        result.push([`+ ${key}`, value]);
+        return [`+ ${key}`, getComparison(value, value)];
       }
-    } else if (isObject(value) && !isObject(file1[key])) {
-      result.push([`- ${key}`, file1[key]]);
-      result.push([`+ ${key}`, getComparison(value, value)]);
-    } else if (!isObject(value) && isObject(file1[key])) {
-      result.push([`- ${key}`, getComparison(file1[key], file1[key])]);
-      result.push([`+ ${key}`, value]);
-    } else if (isObject(value) && isObject(file1[key])) {
-      result.push([`  ${key}`, getComparison(file1[key], value)]);
-    } else if (value === file1[key]) {
-      result.push([`  ${key}`, value]);
-    } else {
-      result.push([`- ${key}`, file1[key]]);
-      result.push([`+ ${key}`, value]);
-    }
-  });
+      return [`+ ${key}`, value];
+    });
 
-  const sortedResult = Object.fromEntries(_.sortBy(result, (item) => item[0].slice(2)));
+  const unchangedPlainData = file2Data
+    .filter(([key, value]) => file1[key] === value)
+    .map(([key, value]) => [`  ${key}`, value]);
+
+  const updatedObjectData = file2Data
+    .filter(([key, value]) => (_.has(file1, key) && file1[key] !== value))
+    .flatMap(([key, value]) => {
+      if (isObject(value) && isObject(file1[key])) {
+        return [[`  ${key}`, getComparison(file1[key], value)]];
+      }
+      if (!isObject(value) && isObject(file1[key])) {
+        return [[`- ${key}`, getComparison(file1[key], file1[key])], [`+ ${key}`, value]];
+      }
+      if (isObject(value) && !isObject(file1[key])) {
+        return [[`- ${key}`, file1[key]], [`+ ${key}`, getComparison(value, value)]];
+      }
+      if (!isObject(value) && !isObject(file1[key])) {
+        return [[`- ${key}`, file1[key]], [`+ ${key}`, value]];
+      }
+      return [];
+    });
+
+  const data = [
+    ...removedData,
+    ...addedData,
+    ...unchangedPlainData,
+    ...updatedObjectData,
+  ];
+
+  const sortedResult = Object.fromEntries(_.sortBy(data, (item) => item[0].slice(2)));
 
   return sortedResult;
 }
